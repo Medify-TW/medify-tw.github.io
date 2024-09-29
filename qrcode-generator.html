@@ -24,6 +24,7 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-sizing: border-box;
         }
         h1 {
             text-align: center;
@@ -87,6 +88,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            box-sizing: border-box;
         }
         #qrTitleDisplay {
             font-size: 20px;
@@ -343,21 +345,41 @@
                     backgroundColor: '#ffffff',
                     scale: 2 // 增加解析度
                 }).then(canvas => {
-                    const link = document.createElement('a');
-                    const date = new Date();
-                    const yyyy = date.getFullYear();
-                    const mm = String(date.getMonth() + 1).padStart(2, '0');
-                    const dd = String(date.getDate()).padStart(2, '0');
-                    const hh = String(date.getHours()).padStart(2, '0');
-                    const min = String(date.getMinutes()).padStart(2, '0');
-                    let filename = 'MEDIFY-QRCode-' + yyyy + mm + dd + hh + min + '.png';
-                    if (document.getElementById('option1').checked && document.getElementById('doctorId').value.trim()) {
-                        filename = `MEDIFY-doctor-${document.getElementById('doctorId').value.trim()}-QRCode-${yyyy}${mm}${dd}${hh}${min}.png`;
-                    }
-                    link.href = canvas.toDataURL('image/png');
-                    link.download = filename;
-                    link.click();
-                    document.getElementById('loading').style.display = 'none';
+                    canvas.toBlob(blob => {
+                        if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], 'qrcode.png', { type: 'image/png' })] })) {
+                            const file = new File([blob], 'qrcode.png', { type: 'image/png' });
+                            navigator.share({
+                                files: [file],
+                                title: 'MEDIFY QR Code',
+                                text: '這是您生成的 QR Code。'
+                            }).then(() => {
+                                console.log('分享成功');
+                                document.getElementById('loading').style.display = 'none';
+                            }).catch((error) => {
+                                console.error('分享失敗:', error);
+                                document.getElementById('loading').style.display = 'none';
+                            });
+                        } else {
+                            // 創建一個臨時的鏈接元素來觸發下載
+                            const link = document.createElement('a');
+                            const date = new Date();
+                            const yyyy = date.getFullYear();
+                            const mm = String(date.getMonth() + 1).padStart(2, '0');
+                            const dd = String(date.getDate()).padStart(2, '0');
+                            const hh = String(date.getHours()).padStart(2, '0');
+                            const min = String(date.getMinutes()).padStart(2, '0');
+                            let filename = 'MEDIFY-QRCode-' + yyyy + mm + dd + hh + min + '.png';
+                            if (document.getElementById('option1').checked && document.getElementById('doctorId').value.trim()) {
+                                filename = `MEDIFY-doctor-${document.getElementById('doctorId').value.trim()}-QRCode-${yyyy}${mm}${dd}${hh}${min}.png`;
+                            }
+                            link.href = URL.createObjectURL(blob);
+                            link.download = filename;
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            document.getElementById('loading').style.display = 'none';
+                        }
+                    }, 'image/png');
                 }).catch(error => {
                     console.error('下載 QR Code 時出錯:', error);
                     document.getElementById('loading').style.display = 'none';
