@@ -5,18 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MEDIFY QR Code 生成器</title>
     <style>
+        /* 全局 box-sizing 設置 */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f2f2f2;
         }
+
         #header {
             background-color: #333;
             padding: 15px;
             color: #fff;
             text-align: center;
         }
+
         .container {
             max-width: 500px;
             margin: 40px auto;
@@ -24,46 +31,52 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            box-sizing: border-box;
         }
+
         h1 {
             text-align: center;
             margin-bottom: 30px;
             font-size: 24px;
             color: #333;
         }
+
         .option {
             margin-bottom: 20px;
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
         }
+
         .option label {
             font-size: 18px;
             cursor: pointer;
             margin-bottom: 10px;
         }
+
         .input-group {
             display: none;
             margin-bottom: 20px;
         }
+
         .input-group.active {
             display: block;
         }
+
         label {
             display: block;
             margin-bottom: 8px;
             font-size: 16px;
             color: #555;
         }
+
         input[type="text"] {
             width: 100%;
             padding: 10px;
             font-size: 16px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box;
         }
+
         button {
             width: 100%;
             padding: 12px;
@@ -74,11 +87,12 @@
             border-radius: 4px;
             cursor: pointer;
             margin-top: 10px;
-            box-sizing: border-box;
         }
+
         button:hover {
             background-color: #218838;
         }
+
         #qrcode-container {
             position: relative;
             text-align: center;
@@ -88,8 +102,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-sizing: border-box;
         }
+
         #qrTitleDisplay {
             font-size: 20px;
             margin-bottom: 16px;
@@ -98,9 +112,11 @@
             word-wrap: break-word;
             text-align: center;
         }
+
         #qrcode {
             display: inline-block;
         }
+
         #downloadBtn {
             display: none;
             width: 100%;
@@ -112,11 +128,12 @@
             border-radius: 4px;
             cursor: pointer;
             margin-top: 20px;
-            box-sizing: border-box;
         }
+
         #downloadBtn:hover {
             background-color: #0069d9;
         }
+
         #loading {
             display: none;
             margin: 20px auto;
@@ -127,6 +144,7 @@
             height: 60px;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -207,6 +225,12 @@
                 font-size: 14px;
                 margin-top: 10px;
             }
+        }
+
+        /* 防止圖片超出容器 */
+        img.responsive-img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -312,7 +336,55 @@
                     height: 200,
                     correctLevel: QRCode.CorrectLevel.H
                 });
-                document.getElementById('downloadBtn').style.display = 'block';
+
+                // 使用 html2canvas 生成包含標題和 QR Code 的整體圖片
+                // 延遲執行以確保 QR Code 已生成
+                setTimeout(function() {
+                    const qrContainer = document.getElementById('qrcode-container');
+                    html2canvas(qrContainer, {
+                        backgroundColor: '#ffffff',
+                        scale: 2 // 增加解析度
+                    }).then(canvas => {
+                        const imgData = canvas.toDataURL('image/png');
+
+                        // 創建一個新的 img 元素來顯示合併後的圖片
+                        let combinedImg = document.getElementById('combinedImg');
+                        if (!combinedImg) {
+                            combinedImg = document.createElement('img');
+                            combinedImg.id = 'combinedImg';
+                            combinedImg.classList.add('responsive-img');
+                            // 隱藏原本的 QR code 容器
+                            qrContainer.style.display = 'none';
+                            document.getElementById('downloadBtn').style.display = 'block';
+                            qrContainer.parentNode.insertBefore(combinedImg, document.getElementById('downloadBtn'));
+                        }
+                        combinedImg.src = imgData;
+                        combinedImg.alt = 'QR Code with Title';
+
+                        // 將下載按鈕的 href 設置為合併後的圖片
+                        document.getElementById('downloadBtn').onclick = function() {
+                            const link = document.createElement('a');
+                            link.href = imgData;
+                            const date = new Date();
+                            const yyyy = date.getFullYear();
+                            const mm = String(date.getMonth() + 1).padStart(2, '0');
+                            const dd = String(date.getDate()).padStart(2, '0');
+                            const hh = String(date.getHours()).padStart(2, '0');
+                            const min = String(date.getMinutes()).padStart(2, '0');
+                            let filename = 'MEDIFY-QRCode-' + yyyy + mm + dd + hh + min + '.png';
+                            if (document.getElementById('option1').checked && document.getElementById('doctorId').value.trim()) {
+                                filename = `MEDIFY-doctor-${document.getElementById('doctorId').value.trim()}-QRCode-${yyyy}${mm}${dd}${hh}${min}.png`;
+                            }
+                            link.download = filename;
+                            link.click();
+                        };
+                    }).catch(error => {
+                        console.error('生成合併圖片時出錯:', error);
+                        document.getElementById('loading').style.display = 'none';
+                    });
+                }, 500); // 延遲 500ms 以確保 QR Code 已生成
+
+                document.getElementById('downloadBtn').style.display = 'none';
             }
 
             // 生成按鈕的事件綁定
@@ -328,62 +400,6 @@
                 if (e.key === 'Enter') {
                     generateQRCode();
                 }
-            });
-
-            // 下載 QR Code 的功能
-            document.getElementById('downloadBtn').addEventListener('click', function() {
-                const qrElement = document.getElementById('qrcode-container');
-                if (qrElement.innerHTML.trim() === '') {
-                    alert('請先生成 QR Code');
-                    return;
-                }
-
-                document.getElementById('loading').style.display = 'block';
-
-                // 使用 html2canvas 捕捉包含標題和 QR Code 的容器
-                html2canvas(qrElement, {
-                    backgroundColor: '#ffffff',
-                    scale: 2 // 增加解析度
-                }).then(canvas => {
-                    canvas.toBlob(blob => {
-                        if (navigator.share && navigator.canShare && navigator.canShare({ files: [new File([blob], 'qrcode.png', { type: 'image/png' })] })) {
-                            const file = new File([blob], 'qrcode.png', { type: 'image/png' });
-                            navigator.share({
-                                files: [file],
-                                title: 'MEDIFY QR Code',
-                                text: '這是您生成的 QR Code。'
-                            }).then(() => {
-                                console.log('分享成功');
-                                document.getElementById('loading').style.display = 'none';
-                            }).catch((error) => {
-                                console.error('分享失敗:', error);
-                                document.getElementById('loading').style.display = 'none';
-                            });
-                        } else {
-                            // 創建一個臨時的鏈接元素來觸發下載
-                            const link = document.createElement('a');
-                            const date = new Date();
-                            const yyyy = date.getFullYear();
-                            const mm = String(date.getMonth() + 1).padStart(2, '0');
-                            const dd = String(date.getDate()).padStart(2, '0');
-                            const hh = String(date.getHours()).padStart(2, '0');
-                            const min = String(date.getMinutes()).padStart(2, '0');
-                            let filename = 'MEDIFY-QRCode-' + yyyy + mm + dd + hh + min + '.png';
-                            if (document.getElementById('option1').checked && document.getElementById('doctorId').value.trim()) {
-                                filename = `MEDIFY-doctor-${document.getElementById('doctorId').value.trim()}-QRCode-${yyyy}${mm}${dd}${hh}${min}.png`;
-                            }
-                            link.href = URL.createObjectURL(blob);
-                            link.download = filename;
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                            document.getElementById('loading').style.display = 'none';
-                        }
-                    }, 'image/png');
-                }).catch(error => {
-                    console.error('下載 QR Code 時出錯:', error);
-                    document.getElementById('loading').style.display = 'none';
-                });
             });
 
             // 禁用右鍵菜單和多指觸控
