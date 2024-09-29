@@ -312,6 +312,17 @@
 
             // 生成 QR Code 的函數
             function generateQRCode() {
+                // 重置狀態
+                const qrContainer = document.getElementById('qrcode-container');
+                qrContainer.style.display = 'flex'; // 顯示 QR code 容器
+                document.getElementById('downloadBtn').style.display = 'none'; // 隱藏下載按鈕
+                const combinedImg = document.getElementById('combinedImg');
+                if (combinedImg) {
+                    combinedImg.remove(); // 移除合併圖片
+                }
+                // 清除之前的 QR Code
+                document.getElementById('qrcode').innerHTML = '';
+
                 let qrText = '';
                 let doctorId = '';
                 const qrTitle = document.getElementById('qrTitle').value.trim();
@@ -332,9 +343,6 @@
                     }
                     qrText = fullUrl;
                 }
-
-                // 清除之前的 QR Code
-                document.getElementById('qrcode').innerHTML = '';
 
                 // 調整 QR Code 大小
                 let qrWidth = 200;
@@ -361,24 +369,21 @@
                 // 使用 html2canvas 生成包含標題和 QR Code 的整體圖片
                 // 延遲執行以確保 QR Code 已生成
                 setTimeout(function() {
-                    const qrContainer = document.getElementById('qrcode-container');
                     html2canvas(qrContainer, {
                         backgroundColor: '#ffffff',
                         scale: 2 // 增加解析度
                     }).then(canvas => {
                         const imgData = canvas.toDataURL('image/png');
 
-                        // 創建一個新的 img 元素來顯示合併後的圖片
-                        let combinedImg = document.getElementById('combinedImg');
-                        if (!combinedImg) {
-                            combinedImg = document.createElement('img');
-                            combinedImg.id = 'combinedImg';
-                            combinedImg.classList.add('responsive-img');
-                            // 隱藏原本的 QR code 容器
-                            qrContainer.style.display = 'none';
-                            document.getElementById('downloadBtn').style.display = 'block';
-                            qrContainer.parentNode.insertBefore(combinedImg, document.getElementById('downloadBtn'));
-                        }
+                        // 創建新的 img 元素來顯示合併後的圖片
+                        let combinedImg = document.createElement('img');
+                        combinedImg.id = 'combinedImg';
+                        combinedImg.classList.add('responsive-img');
+                        // 隱藏原本的 QR code 容器
+                        qrContainer.style.display = 'none';
+                        document.getElementById('downloadBtn').style.display = 'block';
+                        qrContainer.parentNode.insertBefore(combinedImg, document.getElementById('downloadBtn'));
+
                         combinedImg.src = imgData;
                         combinedImg.alt = 'QR Code with Title';
 
@@ -393,8 +398,8 @@
                             const hh = String(date.getHours()).padStart(2, '0');
                             const min = String(date.getMinutes()).padStart(2, '0');
                             let filename = 'MEDIFY-QRCode-' + yyyy + mm + dd + hh + min + '.png';
-                            if (document.getElementById('option1').checked && document.getElementById('doctorId').value.trim()) {
-                                filename = `MEDIFY-doctor-${document.getElementById('doctorId').value.trim()}-QRCode-${yyyy}${mm}${dd}${hh}${min}.png`;
+                            if (document.getElementById('option1').checked && doctorId) {
+                                filename = `MEDIFY-doctor-${doctorId}-QRCode-${yyyy}${mm}${dd}${hh}${min}.png`;
                             }
                             link.download = filename;
                             link.click();
@@ -404,8 +409,6 @@
                         document.getElementById('loading').style.display = 'none';
                     });
                 }, 500); // 延遲 500ms 以確保 QR Code 已生成
-
-                document.getElementById('downloadBtn').style.display = 'none';
             }
 
             // 生成按鈕的事件綁定
