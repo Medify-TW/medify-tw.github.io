@@ -31,6 +31,7 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            width: 100%;
         }
 
         h1 {
@@ -102,6 +103,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         #qrTitleDisplay {
@@ -155,6 +160,7 @@
             .container {
                 margin: 20px;
                 padding: 20px;
+                max-width: 100%;
             }
             h1 {
                 font-size: 20px;
@@ -193,6 +199,7 @@
             .container {
                 margin: 10px;
                 padding: 15px;
+                max-width: 100%;
             }
             h1 {
                 font-size: 18px;
@@ -232,6 +239,12 @@
             max-width: 100%;
             height: auto;
         }
+
+        /* 調整 QR Code 圖片尺寸 */
+        #qrcode img, #qrcode canvas {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -240,13 +253,13 @@
     <div id="header"></div>
     <div class="container">
         <h1>QR Code 生成器</h1>
-        <!-- 選項：輸入醫師代碼或完整URL -->
+        <!-- 選項：輸入醫師代碼或完整 URL -->
         <div class="option">
             <label>
                 <input type="radio" name="option" id="option1" checked> 輸入醫師代碼
             </label>
             <label>
-                <input type="radio" name="option" id="option2"> 輸入完整URL
+                <input type="radio" name="option" id="option2"> 輸入完整 URL
             </label>
         </div>
         <!-- 新增標題輸入框 -->
@@ -259,10 +272,10 @@
             <label for="doctorId">醫師代碼:</label>
             <input type="text" id="doctorId" placeholder="輸入醫師代碼" inputmode="numeric" pattern="\d*">
         </div>
-        <!-- 完整URL輸入框 -->
+        <!-- 完整 URL 輸入框 -->
         <div id="input2" class="input-group">
-            <label for="fullUrl">完整URL:</label>
-            <input type="text" id="fullUrl" placeholder="輸入完整URL">
+            <label for="fullUrl">完整 URL:</label>
+            <input type="text" id="fullUrl" placeholder="輸入完整 URL">
         </div>
         <button id="generateBtn">生成 QR Code</button>
         <div id="qrcode-container">
@@ -313,7 +326,7 @@
                 } else {
                     const fullUrl = document.getElementById('fullUrl').value.trim();
                     if (fullUrl === '') {
-                        alert('請輸入完整URL');
+                        alert('請輸入完整 URL');
                         document.getElementById('fullUrl').focus();
                         return;
                     }
@@ -322,6 +335,14 @@
 
                 // 清除之前的 QR Code
                 document.getElementById('qrcode').innerHTML = '';
+
+                // 調整 QR Code 大小
+                let qrWidth = 200;
+                if (window.innerWidth < 400) {
+                    qrWidth = 150;
+                } else if (window.innerWidth < 600) {
+                    qrWidth = 180;
+                }
 
                 // 顯示標題（如果有輸入）
                 if (qrTitle !== '') {
@@ -332,8 +353,8 @@
 
                 new QRCode(document.getElementById('qrcode'), {
                     text: qrText,
-                    width: 200,
-                    height: 200,
+                    width: qrWidth,
+                    height: qrWidth,
                     correctLevel: QRCode.CorrectLevel.H
                 });
 
@@ -401,16 +422,6 @@
                     generateQRCode();
                 }
             });
-
-            // 禁用右鍵菜單和多指觸控
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-            });
-            document.addEventListener('touchstart', function(e) {
-                if (e.touches.length > 1) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
         });
     </script>
 </body>
