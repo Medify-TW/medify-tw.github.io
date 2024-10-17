@@ -81,7 +81,7 @@
                 iframe.onload = function() {
                     loading.style.display = 'none';
                 };
-                window.history.replaceState({}, document.title, window.location.origin + window.location.pathname);
+                window.history.replaceState({}, document.title, window.location.origin);
             } else {
                 window.location.href = 'https://medify.com.tw';
             }
