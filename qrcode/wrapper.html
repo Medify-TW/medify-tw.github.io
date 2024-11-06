@@ -63,12 +63,6 @@
         }
 
         document.addEventListener("DOMContentLoaded", function() {
-            fetch('header.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('header').innerHTML = data;
-                });
-
             const urlParams = new URLSearchParams(window.location.search);
             const pass = urlParams.get('pass');
             const url = urlParams.get('url');
@@ -108,7 +102,6 @@
     </script>
 </head>
 <body>
-    <div id="header"></div>
     <div id="content">
         <div id="loading"></div>
         <iframe id="secure-iframe" src=""></iframe>

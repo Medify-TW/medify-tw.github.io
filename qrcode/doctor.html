@@ -61,12 +61,17 @@
             const urlParams = new URLSearchParams(window.location.search);
             const pass = urlParams.get('pass');
             const doctor = urlParams.get('doctor');
-            const correctPass = btoa("MEDIFY-20240929");
+            const x6 = "ME";
+            const q5 = "DIF";
+            const z7 = "Y-2";
+            const u2 = "0240";
+            const g1 = "929";
+            const correct = btoa(x6 + q5 + z7 + u2 + g1);
             const content = document.getElementById('content');
             const iframe = document.getElementById('secure-iframe');
             const loading = document.getElementById('loading');
 
-            if (pass === correctPass && doctor) {
+            if (pass === correct && doctor) {
                 content.classList.add('active');
                 const x9 = "htt";
                 const q2 = "ps://m";
