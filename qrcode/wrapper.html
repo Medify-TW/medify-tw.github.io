@@ -126,18 +126,38 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-              // 動態提取 page_path 和 page_title
-              const urlObj = new URL(window.originalUrl);
-              const pagePath = urlObj.pathname;
-              const pageTitle = `Page for ${pagePath}`;
+            // 發送 HTTP 請求以獲取內層頁面的 HTML
+            fetch(window.originalUrl', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'text/html'
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.text(); // 獲取 HTML 內容
+            })
+            .then(html => {
+                // 使用 DOMParser 解析 HTML，提取標題
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const iframeTitle = doc.querySelector('title').textContent; // 抓取 <title>
+                return iframeTitle; // 將標題傳遞到下一個 .then()
+            })
+            .then(iframeTitle => {
+                // 發送虛擬頁面檢視到 GA4
+                gtag('event', 'page_view', {
+                    page_title: iframeTitle, // 使用提取的標題
+                    page_path: new URL(window.originalUrl).pathname,
+                    page_location: window.originalUrl
+                });
 
-            // 發送虛擬頁面檢視到 GA4
-            gtag('event', 'page_view', {
-              page_title: pageTitle,             // 動態標題（可選）
-              page_path: pagePath,               // 動態路徑（可選）
-              page_location: window.originalUrl  // 完整 URL
+                console.log('Title:', iframeTitle); // 檢查標題是否正確
+                window.originalUrl = ''
+            })
+            .catch(error => {
+                console.error('Error fetching iframe content:', error);
             });
-            window.originalUrl = ""
         });
     </script>
 
