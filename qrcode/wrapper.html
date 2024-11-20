@@ -140,13 +140,15 @@
                 return iframeTitle; // 將標題傳遞到下一個 .then()
             })
             .then(iframeTitle => {
+                // 更新外層頁面的 <title>
+                document.title = iframeTitle;
+
                 // 發送虛擬頁面檢視到 GA4
                 gtag('event', 'page_view', {
                     page_title: iframeTitle, // 使用提取的標題
                     page_path: new URL(window.originalUrl).pathname,
                     page_location: window.originalUrl
                 });
-
                 console.log('Title:', iframeTitle); // 檢查標題是否正確
                 window.originalUrl = ''
             })
