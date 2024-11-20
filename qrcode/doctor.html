@@ -118,8 +118,15 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            // 動態提取 page_path 和 page_title
+            const urlObj = new URL(window.originalUrl);
+            const pagePath = urlObj.pathname; // "/doctor-80"
+            const pageTitle = `Page for ${pagePath.split("/").pop()}`; // 動態生成標題 "Page for doctor-80"
+
             // 發送虛擬頁面檢視到 GA4
             gtag('event', 'page_view', {
+              page_title: pageTitle,             // 動態標題（可選）
+              page_path: pagePath,               // 動態路徑（可選）
               page_location: window.originalUrl  // 完整 URL
             });
             window.originalUrl = ""
