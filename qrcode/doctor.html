@@ -119,12 +119,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // 發送 HTTP 請求以獲取內層頁面的 HTML
-            fetch(window.originalUrl, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'text/html'
-                }
-            })
+            fetch(window.originalUrl)
             .then(response => {
                 if (!response.ok) throw new Error('Network response was not ok');
                 return response.text(); // 獲取 HTML 內容
