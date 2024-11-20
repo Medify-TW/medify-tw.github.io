@@ -50,6 +50,7 @@
             100% { transform: translate(-50%, -50%) rotate(360deg); }
         }
     </style>
+
     <script>
         function utf8ToB(str) {
             const base64 = btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) =>
@@ -87,6 +88,9 @@
             const loading = document.getElementById('loading');
 
             if (pass === correct && url) {
+                // 定義全域變數
+                window.originalUrl = bToUtf8(url)
+
                 content.classList.add('active');
                 iframe.src = bToUtf8(url);
                 iframe.style.display = 'block';
@@ -110,6 +114,26 @@
             }, { passive: false });
         });
     </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZBF5ELF43R"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        // 初始化 GA4
+        gtag('config', 'G-ZBF5ELF43R');
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 發送虛擬頁面檢視到 GA4
+            gtag('event', 'page_view', {
+              page_location: window.originalUrl  // 完整 URL
+            });
+            window.originalUrl = ""
+        });
+    </script>
+
 </head>
 <body>
     <div id="content">

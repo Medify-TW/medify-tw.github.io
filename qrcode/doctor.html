@@ -81,6 +81,10 @@
                 const v6 = "w/doc";
                 const l7 = "tor-" + doctor + "/";
                 iframe.src = x9 + q2 + z3 + u4 + k5 + v6 + l7;
+
+                // 定義全域變數
+                window.originalUrl = iframe.src
+
                 iframe.style.display = 'block';
                 loading.style.display = 'block';
                 iframe.onload = function() {
@@ -102,6 +106,26 @@
             }, { passive: false });
         });
     </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZBF5ELF43R"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        // 初始化 GA4
+        gtag('config', 'G-ZBF5ELF43R');
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // 發送虛擬頁面檢視到 GA4
+            gtag('event', 'page_view', {
+              page_location: window.originalUrl  // 完整 URL
+            });
+            window.originalUrl = ""
+        });
+    </script>
+
 </head>
 <body>
     <div id="header"></div>
