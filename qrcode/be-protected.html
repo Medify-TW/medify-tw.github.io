@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        header {
+            padding: 10px;
+            background-color: #f8f8f8;
+            display: flex;
+            align-items: center;
+        }
+        .header-image {
+            margin-left: 20px;
+            width: 100px;
+            height: 30px;
+        }
+        .content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            color: #424242;
+            font-family: "Roboto", Sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+        }
+        .content img {
+            max-width: 568px;
+            max-height: 414px;
+            width: 40%;
+            height: auto;
+        }
+        .content > div,
+        .content > a {
+            margin-bottom: 20px;
+        }
+        .description {
+            max-width: 568px;
+            width: 70%;
+            line-height: 2;
+        }
+        .elementor-button {
+            width: 35%;
+            background-color: #44BDDB;
+            color: white;
+            font-family: "Roboto", Sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 44px 44px 44px 44px;
+            padding: 14px 0px 14px 0px;
+        }
+        .elementor-button:hover {
+            background-color: #005bb5;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="https://medify.com.tw">
+            <img class="header-image" src="https://medify.com.tw/wp-content/uploads/2024/02/medify-logo202402.svg" alt="Medify Logo">
+        </a>
+    </header>
+
+    <div class ="content">
+    	<div>
+    		<img src="https://i0.wp.com/medify.com.tw/wp-content/uploads/2024/11/medify-popup.webp?fit=568%2C414&amp;ssl=1" alt="" srcset="https://i0.wp.com/medify.com.tw/wp-content/uploads/2024/11/medify-popup.webp?w=568&amp;ssl=1 568w, https://i0.wp.com/medify.com.tw/wp-content/uploads/2024/11/medify-popup.webp?resize=300%2C219&amp;ssl=1 300w" sizes="(max-width: 568px) 100vw, 568px">
+    	</div>
+
+    	<div class="description">
+    		<p>Medify 所提供的醫療、治療相關內容與醫材資訊，皆屬於醫病間溝通使用，非用於傳播與招攬醫療業務，請勿轉傳利用。</p>
+        </div>
+
+        <a class="elementor-button" href="https://medify.com.tw">
+            <span>回到首頁</span>
+        </a>
+    </div>
+</body>
+</html>

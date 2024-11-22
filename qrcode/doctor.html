@@ -90,9 +90,9 @@
                 iframe.onload = function() {
                     loading.style.display = 'none';
                 };
-                window.history.replaceState({}, document.title, window.location.origin);
+                window.history.replaceState({}, document.title, window.location.origin + window.location.pathname.replace(/[^/]*$/, 'be-protected.html'));
             } else {
-                window.location.href = 'https://medify.com.tw';
+                window.location.href = window.location.origin + window.location.pathname.replace(/[^/]*$/, 'be-protected.html');
             }
 
             document.addEventListener('contextmenu', function(e) {
