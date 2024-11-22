@@ -23,22 +23,22 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 14px;
             text-align: center;
             color: #424242;
             font-family: "Roboto", Sans-serif;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 400;
         }
         .content img {
             max-width: 568px;
             max-height: 414px;
-            width: 40%;
+            width: 60%;
             height: auto;
         }
         .content > div,
         .content > a {
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
         .description {
             max-width: 568px;
@@ -66,9 +66,9 @@
         }
     </style>
     <script>
-        // JavaScript: 3秒後轉導到目標頁面
+        // JavaScript: N秒後轉導到目標頁面
         window.onload = function () {
-                let countdown = 3; // 初始倒數秒數
+                let countdown = 5; // 初始倒數秒數
                 const countdownElement = document.getElementById("countdown");
 
                 const interval = setInterval(function () {
@@ -95,7 +95,12 @@
     	</div>
 
     	<div class="description">
-    		<p>Medify 所提供的醫療、治療相關內容與醫材資訊，皆屬於醫病間溝通使用，非用於傳播與招攬醫療業務，請勿轉傳利用。</p>
+    		<p>
+                Medify 所提供的醫療、治療相關內容與醫材資訊，皆屬於醫病間溝通使用，非用於傳播與招攬醫療業務。若您透過轉傳連結，將無法順利進入此頁面，並建議前往 Medify 官方 YouTube 頻道觀看更多公開衛教資訊。
+            </p>
+            <p>
+                若您想要觀看 Medify 醫師頁面內容，必須先前往該位醫師的診間就診後，始能進行閱覽。
+            </p>
         </div>
 
         <a class="elementor-button" href="https://www.youtube.com/@medify90">
@@ -103,7 +108,7 @@
         </a>
 
         <p id="countdown-text">
-            <span id="countdown">3</span> 秒後將自動跳轉到新的頁面。
+            <span id="countdown">5</span> 秒後將自動跳轉到新的頁面。
         </p>
     </div>
 </body>
