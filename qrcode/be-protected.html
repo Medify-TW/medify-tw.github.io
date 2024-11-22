@@ -45,6 +45,7 @@
             line-height: 2;
         }
         .elementor-button {
+            min-width: 150px;
             width: 35%;
             background-color: #44BDDB;
             color: white;
@@ -58,7 +59,27 @@
         .elementor-button:hover {
             background-color: #005bb5;
         }
+        #countdown-text {
+            color: lightslategray;
+            font-size: 12px;
+        }
     </style>
+    <script>
+        // JavaScript: 3秒後轉導到目標頁面
+        window.onload = function () {
+                let countdown = 3; // 初始倒數秒數
+                const countdownElement = document.getElementById("countdown");
+
+                const interval = setInterval(function () {
+                    countdown -= 1;
+                    countdownElement.textContent = countdown; // 更新倒數文字
+                    if (countdown === 0) {
+                        clearInterval(interval); // 停止計時器
+                        window.location.href = "https://www.youtube.com/@medify90";
+                    }
+                }, 1000); // 每秒更新一次
+            };
+    </script>
 </head>
 <body>
     <header>
@@ -76,9 +97,13 @@
     		<p>Medify 所提供的醫療、治療相關內容與醫材資訊，皆屬於醫病間溝通使用，非用於傳播與招攬醫療業務，請勿轉傳利用。</p>
         </div>
 
-        <a class="elementor-button" href="https://medify.com.tw">
-            <span>回到首頁</span>
+        <a class="elementor-button" href="https://www.youtube.com/@medify90">
+            <span>前往 YouTube</span>
         </a>
+
+        <p id="countdown-text">
+            <span id="countdown">3</span> 秒後將自動跳轉到新的頁面。
+        </p>
     </div>
 </body>
 </html>
